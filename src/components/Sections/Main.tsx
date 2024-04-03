@@ -7,10 +7,9 @@ export function Main() {
             <div>
                 <Header />
             </div>
-            <div>
+            <div className="p-3">
                 <Contenido />
             </div>
-        </>
-    )
+        </>    )
 
 }

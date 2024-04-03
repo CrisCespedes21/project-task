@@ -7,7 +7,7 @@ export function Lista() {
             <div>
                 <Cabecera />
             </div>
-            <div className="p-2 gap-2">
+            <div className="p-2 gap-2 flex justify-center">
                 <Calendario />
             </div>
         </>

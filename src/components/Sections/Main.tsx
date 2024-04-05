@@ -10,7 +10,7 @@ export function Main() {
             </div>
             <div className="p-3">
                  <NuevaTarea />
-                {/* <ListarTareas /> */}
+                {/* <ListarTareas />  */}
             </div>
         </>
     )

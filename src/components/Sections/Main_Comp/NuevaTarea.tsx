@@ -14,7 +14,7 @@ export const NuevaTarea = () => {
             <div className="flex w-full justify-center">
                 <div className="flex w-full flex-col  max-w-screen-lg">
                     <div className='flex items-center mb-3 justify-between'>
-                        <h1 className='text-2xl font-bold mr-2'> Nueva Tarea</h1>
+                        <h1 className='text-xl sm:text-2xl font-bold mr-2'> Nueva Tarea</h1>
                         <div className='flex'>
                             <Button className="flex gap-3" variant="default">
                                 <Link className="flex gap-3" to="/">

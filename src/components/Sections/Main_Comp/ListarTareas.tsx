@@ -13,8 +13,8 @@ export const ListarTareas = () => {
             <div className="flex justify-center w-full">
                 <div className="flex w-full items-center flex-col  max-w-screen-lg">
                     <div className='flex justify-between w-full items-center mb-3'>
-                        <h1 className='text-xl font-bold mr-2'>Tus Tareas de Hoy</h1>
-                        <div className='flex  mt-4 '>
+                        <h1 className='text-xl sm:text-2xl font-bold mr-2'>Tus Tareas de Hoy</h1>
+                        <div className='flex'>
                             <Button  variant="default">
                                 <Link className="flex gap-3" to="/nueva-tarea">
                                     <Plus className="w-[18px] h-[18px]" />

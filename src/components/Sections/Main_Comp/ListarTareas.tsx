@@ -5,7 +5,7 @@ import { Pencil } from 'lucide-react';
 import { Trash2 } from 'lucide-react';
 import { TextSearch } from 'lucide-react';
 import { Plus } from 'lucide-react';
-
+import { Link } from 'react-router-dom';
 
 export const ListarTareas = () => {
     return (
@@ -15,7 +15,12 @@ export const ListarTareas = () => {
                     <div className='flex justify-between w-full items-center mb-3'>
                         <h1 className='text-xl font-bold mr-2'>Tus Tareas de Hoy</h1>
                         <div className='flex  mt-4 '>
-                            <Button className="flex gap-3" variant="default"> <Plus className="w-[18px]  h-[18px]" /> Nueva Tarea</Button>
+                            <Button  variant="default">
+                                <Link className="flex gap-3" to="/nueva-tarea">
+                                    <Plus className="w-[18px] h-[18px]" />
+                                    Nueva Tarea
+                                </Link>
+                            </Button>
                         </div>
                     </div>
                     <div className="mt-3 flex flex-col gap-4 items-center w-full">

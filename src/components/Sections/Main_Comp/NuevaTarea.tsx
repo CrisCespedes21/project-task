@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input";
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
+import { Link } from 'react-router-dom';
 
 export const NuevaTarea = () => {
     return (
@@ -15,7 +16,12 @@ export const NuevaTarea = () => {
                     <div className='flex items-center mb-3 justify-between'>
                         <h1 className='text-2xl font-bold mr-2'> Nueva Tarea</h1>
                         <div className='flex'>
-                            <Button className="flex gap-3" variant="default"> < Save className="w-[18px]  h-[18px]" />Guardar Tarea</Button>
+                            <Button className="flex gap-3" variant="default">
+                                <Link className="flex gap-3" to="/">
+                                    < Save className="w-[18px]  h-[18px]" />
+                                    Guardar Tarea
+                                </Link>
+                            </Button>
                         </div>
                     </div>
                     <form className='p-0 '>

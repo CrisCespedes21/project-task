@@ -1,6 +1,5 @@
 import { Header } from "./Main_Comp/Header"
-import { NuevaTarea } from "./Main_Comp/NuevaTarea"
-import { ListarTareas } from "./Main_Comp/ListarTareas"
+import { PageRoutes } from "../Routes/Route"
 
 export function Main() {
     return (
@@ -9,8 +8,7 @@ export function Main() {
                 <Header />
             </div>
             <div className="p-3">
-                 <NuevaTarea />
-                {/* <ListarTareas />  */}
+                <PageRoutes /> 
             </div>
         </>
     )

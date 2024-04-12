@@ -1,22 +1,54 @@
-import { ChevronRight } from "lucide-react";
-import { Save } from "lucide-react";
+import { ChevronRight, Save } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
-import { FormDataCreate, Tarea, colores, coloresClasses } from "@/lib/definiciones";
-import { useNavigate } from "react-router-dom";
+import {
+  FormDataEdit,
+  Tarea,
+  colores,
+  coloresClasses,
+} from "@/lib/definiciones";
+import { useNavigate, useParams } from "react-router-dom";
 
-interface NuevaTareaProps {
-  agregarTarea: (nuevaTarea: Tarea) => void;
+interface EditarTareaProps {
+  editarTarea: (tareaEditada: FormDataEdit) => void;
+  listaTareas: Tarea[];
 }
 
-export const NuevaTarea: React.FC<NuevaTareaProps> = ({ agregarTarea }) => {
-  // Establece la navegacion
+export const EditarTarea: React.FC<EditarTareaProps> = ({
+  editarTarea,
+  listaTareas,
+}) => {
   const navegación = useNavigate();
+  const { id } = useParams();
 
+  //   Busqueda del id en el array tareas
+  const tareaActualizar = listaTareas.find((tarea) => tarea.id === id);
+  if (!tareaActualizar) {
+    navegación("/");
+    return;
+  }
+
+  const [formData, setFormData] = useState<FormDataEdit>({
+    id: tareaActualizar.id,
+    nombre: tareaActualizar.nombre,
+    descripcion: tareaActualizar.descripcion,
+    color: tareaActualizar.color,
+    ciclo: tareaActualizar.ciclo,
+    frecuencia: tareaActualizar.frecuencia,
+    dias: tareaActualizar.dias,
+    categoria: tareaActualizar.categoria,
+    estado: tareaActualizar.estado,
+  });
+
+  const [colorActivo, setColorActivo] = useState(tareaActualizar.color);
+  const [categoriaActiva, setCategoriaActiva] = useState(
+    tareaActualizar.categoria
+  );
+  const [frecuencia, setFrecuencia] = useState("");
   const getClassName = (color: string) => {
     if (color === colorActivo) {
       return `sm:w-8 sm:h-8 w-6 h-6 rounded-full outline-none ring-2 ${coloresClasses[color].bgActivo} ${coloresClasses[color].ring}`;
@@ -25,35 +57,12 @@ export const NuevaTarea: React.FC<NuevaTareaProps> = ({ agregarTarea }) => {
     }
   };
 
-  // Estado para el formulario
-  const [formData, setFormData] = useState<FormDataCreate>({
-    nombre: "",
-    descripcion: "",
-    color: "",
-    ciclo: false,
-    frecuencia: "",
-    dias: [],
-    categoria: "",
-  });
-  // Estados para los colores, categorias y frecuencia
-  const [frecuencia, setFrecuencia] = useState("");
-  const [colorActivo, setColorActivo] = useState("");
-  const [categoriaActiva, setCategoriaActiva] = useState("");
-
-  // Manejo del formulario
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
-    // Crear la nueva tarea
-    const nuevaTarea: Tarea = {
-      id: Date.now().toString(),
-      ...formData,
-      estado: "pendiente",
-    };
-    agregarTarea(nuevaTarea);
+    editarTarea(formData);
     navegación("/");
   };
-  // Manejo de los cambios en el formulario
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -62,18 +71,22 @@ export const NuevaTarea: React.FC<NuevaTareaProps> = ({ agregarTarea }) => {
       [e.target.name]: e.target.value,
     });
   };
-  // Manejo de los cambios en el switch
+
   const handelSwitchChange = (ciclo: boolean) => {
     setFormData({
       ...formData,
       ciclo: ciclo,
     });
   };
-  // Manejo de la frecuencia
+
   const handleFrecuencia = (frecuencia: string) => {
     setFrecuencia(frecuencia);
+    setFormData({
+      ...formData,
+      frecuencia: frecuencia,
+    });
   };
-  // Manejo del color
+
   const handleColor = (color: string) => {
     setColorActivo(color);
     setFormData({
@@ -81,7 +94,7 @@ export const NuevaTarea: React.FC<NuevaTareaProps> = ({ agregarTarea }) => {
       color: color,
     });
   };
-  // Manejo de la categoria
+
   const handleCategoria = (categoria: string) => {
     setCategoriaActiva(categoria);
     setFormData({
@@ -97,9 +110,11 @@ export const NuevaTarea: React.FC<NuevaTareaProps> = ({ agregarTarea }) => {
           className="flex w-full flex-col  max-w-screen-lg"
           onSubmit={handleSubmit}
         >
-          {/* Header */}
           <div className="flex items-center mb-3 justify-between">
-            <h1 className="text-xl sm:text-2xl font-bold mr-2"> Nueva Tarea</h1>
+            <h1 className="text-xl sm:text-2xl font-bold mr-2">
+              {" "}
+              Editar Tarea
+            </h1>
             <div className="flex">
               <Button className="flex gap-3" variant="default" type="submit">
                 <Save className="w-[18px]  h-[18px]" />
@@ -107,26 +122,26 @@ export const NuevaTarea: React.FC<NuevaTareaProps> = ({ agregarTarea }) => {
               </Button>
             </div>
           </div>
-          {/* Formulario */}
           <div className="p-0 ">
-            {/* Impust */}
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Input
                   required
                   name="nombre"
+                  value={formData.nombre}
                   onChange={handleChange}
                   id="nombre"
-                  placeholder="Nombre de tu nueva tarea"
+                  placeholder="Nombre de tu tarea"
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Input
                   required
                   name="descripcion"
+                  value={formData.descripcion}
                   onChange={handleChange}
                   id="descripcion"
-                  placeholder="Describe tu nueva tarea"
+                  placeholder="Descripción de tu tarea"
                 />
               </div>
             </div>
@@ -138,7 +153,7 @@ export const NuevaTarea: React.FC<NuevaTareaProps> = ({ agregarTarea }) => {
           </div>
           {/*Selección de Color  */}
           <div className="flex sm:justify-center justify-start gap-8 flex-wrap">
-            <input required  type="hidden" name="color" value={formData.color} />
+            <input type="hidden" name="color" value={formData.color} />
             {colores.map((color) => (
               <button
                 key={color}
@@ -164,6 +179,12 @@ export const NuevaTarea: React.FC<NuevaTareaProps> = ({ agregarTarea }) => {
                 <Separator></Separator>
                 <div className="w-full flex justify-center">
                   <div className="bg-gray-100 flex flex-row w-fit  rounded-full m-0">
+                    <input
+                      required
+                      type="hidden"
+                      name="frecuencia"
+                      value={formData.frecuencia}
+                    />
                     <Button
                       type="button"
                       variant={
@@ -199,7 +220,7 @@ export const NuevaTarea: React.FC<NuevaTareaProps> = ({ agregarTarea }) => {
                 <Separator></Separator>
                 <div>
                   <div className="flex h-8 items-center text-sm justify-between">
-                    <Button
+                    {/* <Button
                       type="button"
                       variant="secondary"
                       className="rounded-full w-8 h-8"
@@ -253,7 +274,7 @@ export const NuevaTarea: React.FC<NuevaTareaProps> = ({ agregarTarea }) => {
                       className="rounded-full w-8 h-8 "
                     >
                       <p>DO</p>
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
                 <Separator />

@@ -1,3 +1,13 @@
+import {
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tarea } from "@/lib/definiciones";
@@ -9,9 +19,17 @@ import { Link } from "react-router-dom";
 
 interface ListarTareasProps {
   tareas: Tarea[];
+  eliminarTarea: (id: string) => void;
 }
 
-export const ListarTareas: React.FC<ListarTareasProps> = ({ tareas }) => {
+export const ListarTareas: React.FC<ListarTareasProps> = ({
+  tareas,
+  eliminarTarea,
+}) => {
+  const handleDelete = (id: string) => {
+    eliminarTarea(id);
+  };
+
   return (
     <>
       <div className="flex justify-center w-full">
@@ -30,9 +48,13 @@ export const ListarTareas: React.FC<ListarTareasProps> = ({ tareas }) => {
             </div>
           </div>
           <div className="mt-3 flex flex-col gap-4 items-center w-full">
-            {
-              tareas.sort((a, b) => (a.id > b.id ? -1 : 1)).map((tarea) => (
-                <div key={tarea.id} className={`p-2 px-4 grid-cols-2 grid gap-4  bg-${tarea.color}-300 shadow border rounded-xl w-full`}>
+            {tareas
+              .sort((a, b) => (a.id > b.id ? -1 : 1))
+              .map((tarea) => (
+                <div
+                  key={tarea.id}
+                  className={`p-2 px-4 grid-cols-2 grid gap-4  bg-${tarea.color}-300 shadow border rounded-xl w-full`}
+                >
                   <div className="flex justify-start items-center gap-3 ">
                     <Checkbox />
                     <div className="space-y-1 leading-none">
@@ -46,15 +68,35 @@ export const ListarTareas: React.FC<ListarTareasProps> = ({ tareas }) => {
                       <TextSearch className="w-[18px]  h-[18px]" />
                     </Button>
                     <Button variant="ghost" size="icon">
-                      <Pencil className="w-[18px]  h-[18px}" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <Trash2 className="w-[18px]  h-[18px]" />
-                    </Button>
+                      <Link to={`/editar-tarea/${tarea.id}`}>
+                        <Pencil className="w-[18px]  h-[18px}" />
+                      </Link>
+                    </Button>                   
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <Trash2 className="w-[18px]  h-[18px]" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Eliminar Tarea</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Esta acción no se puede deshacer. ¿Estás seguro de
+                            eliminar la tarea?
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                          <Button onClick={() => handleDelete(tarea.id)}>
+                            Continuar
+                          </Button>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </div>
-              ))
-            }
+              ))}
           </div>
         </div>
       </div>

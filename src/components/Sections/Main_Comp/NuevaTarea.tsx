@@ -6,10 +6,37 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
-import { FormData } from "@/lib/definiciones";
+import { FormDataCreate, Tarea } from "@/lib/definiciones";
+import { useNavigate } from "react-router-dom";
 
-export const NuevaTarea = () => {
-  const [formData, setFormData] = useState<FormData>({
+interface NuevaTareaProps {
+  agregarTarea: (nuevaTarea: Tarea) => void;
+}
+
+export const NuevaTarea: React.FC<NuevaTareaProps> = ({ agregarTarea }) => {
+  // Establece la navegacion
+  const navegación = useNavigate();
+
+  // Definir colores
+  const colores = [
+    "slate",
+    "stone",
+    "blue",
+    "cyan",
+    "violet",
+    "purple",
+    "fuchsia",
+    "rose",
+    "red",
+    "orange",
+    "amber",
+    "lime",
+    "green",
+    "emerald",
+  ];
+
+  // Estado para el formulario
+  const [formData, setFormData] = useState<FormDataCreate>({
     nombre: "",
     descripcion: "",
     color: "",
@@ -18,14 +45,25 @@ export const NuevaTarea = () => {
     dias: [],
     categoria: "",
   });
+  // Estados para los colores, categorias y frecuencia
   const [frecuencia, setFrecuencia] = useState("");
   const [colorActivo, setColorActivo] = useState("");
   const [categoriaActiva, setCategoriaActiva] = useState("");
 
+  // Manejo del formulario
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formData);
+    // Crear la nueva tarea
+    const nuevaTarea: Tarea = {
+      id: Date.now().toString(),
+      ...formData,
+      estado: "pendiente",
+    };
+    agregarTarea(nuevaTarea);
+    navegación("/");
   };
+  // Manejo de los cambios en el formulario
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -34,17 +72,18 @@ export const NuevaTarea = () => {
       [e.target.name]: e.target.value,
     });
   };
-
-  const handelSwitchChange =(ciclo:boolean)=>{
+  // Manejo de los cambios en el switch
+  const handelSwitchChange = (ciclo: boolean) => {
     setFormData({
       ...formData,
       ciclo: ciclo,
     });
-  }
-
+  };
+  // Manejo de la frecuencia
   const handleFrecuencia = (frecuencia: string) => {
     setFrecuencia(frecuencia);
   };
+  // Manejo del color
   const handleColor = (color: string) => {
     setColorActivo(color);
     setFormData({
@@ -52,6 +91,7 @@ export const NuevaTarea = () => {
       color: color,
     });
   };
+  // Manejo de la categoria
   const handleCategoria = (categoria: string) => {
     setCategoriaActiva(categoria);
     setFormData({
@@ -83,6 +123,7 @@ export const NuevaTarea = () => {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Input
+                  required
                   name="nombre"
                   onChange={handleChange}
                   id="nombre"
@@ -91,6 +132,7 @@ export const NuevaTarea = () => {
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Input
+                  required
                   name="descripcion"
                   onChange={handleChange}
                   id="descripcion"
@@ -242,9 +284,9 @@ export const NuevaTarea = () => {
                   <h2 className="text-sm font-semibold text-zinc-900	mr-2">
                     Establezca un ciclo para su tarea
                   </h2>
-                  <Switch 
-                  checked={formData.ciclo}
-                  onCheckedChange={handelSwitchChange}
+                  <Switch
+                    checked={formData.ciclo}
+                    onCheckedChange={handelSwitchChange}
                   />
                 </div>
                 <Separator></Separator>
@@ -356,6 +398,7 @@ export const NuevaTarea = () => {
               {/* Categoria para la tarea */}
               <div className="flex flex-col gap-3 mr-2">
                 <input
+                  required
                   type="hidden"
                   name="categoria"
                   value={formData.categoria}
@@ -366,15 +409,25 @@ export const NuevaTarea = () => {
                 <Separator></Separator>
                 <div className=" gap-2 flex flex-col sm:flex-row sm:w-fit w-auto rounded-3xl sm:rounded-full m-0 text-neutral-800">
                   <Button
+                    type="button"
                     onClick={() => handleCategoria("Rutina Diaria")}
-                    variant={categoriaActiva === "Rutina Diaria" ? "default" : "secondary"}
+                    variant={
+                      categoriaActiva === "Rutina Diaria"
+                        ? "default"
+                        : "secondary"
+                    }
                     className="rounded-full"
                   >
                     Rutina Diaria
                   </Button>
                   <Button
+                    type="button"
                     onClick={() => handleCategoria("Rutina de Estudio")}
-                    variant={categoriaActiva === "Rutina de Estudio" ? "default" : "secondary"}
+                    variant={
+                      categoriaActiva === "Rutina de Estudio"
+                        ? "default"
+                        : "secondary"
+                    }
                     className="rounded-full"
                   >
                     Rutina de Estudio
